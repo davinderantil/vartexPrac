@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+            <h1>Hello from mongoFetch</h1>
+        </div>
+        <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6 text-right">
+            <a href="/register" class="btn btn-success" style="margin-top:20px">Add New</a>
+        </div>
+    </div>
+
+<div class="table-responsive">
+    <table class="table" id="table">
+        <tr class="success">
+            <th>name</th>
+            <th>email</th>
+            <th>phone</th>
+            <th>question</th>
+              <th>Image</th>
+            <th>action</th>
+        </tr>
+    {{#each data}}
+        <tr>
+            <td contenteditable="true" data-value="{{name}}" data-id="{{_id}}" id="name{{_id}}">{{name}}</td>
+            <td contenteditable="true" data-value="{{email}}" data-id="{{_id}}" id="email{{_id}}">{{email}}</td>
+            <td contenteditable="true" data-value="{{phone}}" data-id="{{_id}}" id="phone{{_id}}">{{phone}}</td>
+            <td contenteditable="true" data-value="{{phone}}" data-id="{{_id}}" id="question{{_id}}">{{question}}</td>
+            <td> <img height=200 width=200 src="data:image/*;base64,{{Image}}"></td>
+                                 <td>
+                <a id="delete" data-value="{{_id}}" class="btn btn-danger">delete</a>
+                <a id="update" data-value="{{_id}}" style="margin-left: 10px" class="btn btn-default" >update</a>
+            </td>
+        </tr>
+    {{/each}}
+    </table>
+
+</div>
+</div>
+</body>
+</html>
+<script>
+    $(document).on("click","#delete",function(){
+        var _id=$(this).attr("data-value");
+        $.ajax({
+            url : "http://localhost:8080/deleteUser",
+            data: {
+                'id ': _id,
+            },
+            type: 'POST',
+            success : function(result){
+                window.location.href = "http://localhost:8080/allUsers";
+            }
+        });
+    });
+    $(document).on("click","#update",function(){
+       var _id=$(this).attr("data-value");
+       var email=$("#email"+_id).html();
+       var name=$("#name"+_id).html();
+       var phone=$("#phone"+_id).html();
+       var question=$("#question"+_id).html();
+
+       $.ajax({
+           url : "http://localhost:8080/updateUser",
+           data: {
+               '_id': _id,
+               'email': email,
+               'name': name,
+               'phone': phone,
+               'question': question,
+           },
+           type: 'POST',
+           success : function(result){
+              window.location="http://localhost:8080/allUsers";
+           }
+       });
+    });
+</script>
+
